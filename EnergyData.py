@@ -3,20 +3,20 @@
 import urllib.request
 from lxml import objectify
 
+import numpy as np
 import pandas as pd
 
 import matplotlib.pyplot as plt
 
 from datetime import datetime
 from datetime import timedelta
-
+#%%
 
 def GetKey():
     #Read in the API key 
     with open('API_Key.txt', 'r') as file:
         Key = file.read()
     return Key
-
 
 Key=GetKey()
 
@@ -44,19 +44,34 @@ else:
     xml = objectify.parse(urllib.request.urlopen(url))
     root=xml.getroot()
 
+#%%
 #Initialise lists for extracting data from
 Fuel =[]
 Energy =[]
 Pct =[]
 
-#
 for child in root.INST:
     for e in child.getchildren():
         Fuel.append(e.attrib['TYPE'])
-        Energy.append(e.attrib['VAL'])
-        Pct.append(e.attrib['PCT'])
+        Energy.append(int(e.attrib['VAL']))
+        Pct.append(float(e.attrib['PCT']))
 
-plt.pie(Energy, labels=Fuel, autopct='%1.1f%%', shadow=True, startangle=140)
+#%%
+# Place data into a Pandas Dataframe
+Arr = [('Source', Fuel),('Energy', Energy), ('Pct', Pct)]
+df = pd.DataFrame.from_dict(dict(Arr))
 
-plt.axis('equal')
-plt.show()
+# Sort the data Descending in terms of energy contribution
+df.sort_values(by='Energy', ascending=False, inplace=True)
+
+print(df)
+
+#%%
+
+
+
+#plt.pie(Energy, labels=Fuel, autopct='%1.1f%%', shadow=False, startangle=140)
+
+df.plot(kind='pie', subplots = True, autopct='%1.1f%%', shadow=False, startangle=140)
+#plt.axis('equal')
+#plt.show()
