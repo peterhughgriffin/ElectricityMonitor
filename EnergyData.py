@@ -56,22 +56,12 @@ for child in root.INST:
         Energy.append(int(e.attrib['VAL']))
         Pct.append(float(e.attrib['PCT']))
 
-#%%
 # Place data into a Pandas Dataframe
-Arr = [('Source', Fuel),('Energy', Energy), ('Pct', Pct)]
-df = pd.DataFrame.from_dict(dict(Arr))
+Data = {'Energy': Energy, 'Pct': Pct}
+df = pd.DataFrame(Data, index = Fuel)
 
 # Sort the data Descending in terms of energy contribution
 df.sort_values(by='Energy', ascending=False, inplace=True)
 
-print(df)
 
-#%%
-
-
-
-#plt.pie(Energy, labels=Fuel, autopct='%1.1f%%', shadow=False, startangle=140)
-
-df.plot(kind='pie', subplots = True, autopct='%1.1f%%', shadow=False, startangle=140)
-#plt.axis('equal')
-#plt.show()
+df.plot(y='Energy',kind='pie', autopct='%1.1f%%', shadow=False, startangle=0)
