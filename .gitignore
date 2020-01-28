@@ -1,0 +1,9 @@
+#API_Key file
+API_key.txt
+
+#Code snippets
+Scribbles.py
+
+#Data files
+*.xml
+*.csv
