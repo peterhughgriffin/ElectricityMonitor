@@ -1,5 +1,6 @@
 #API_Key file
 API_key.txt
+LastAccessed.txt
 
 #Code snippets
 Scribbles.py
@@ -7,6 +8,7 @@ Scribbles.py
 #Data files
 *.xml
 *.csv
+
 
 #Documentation
 *.pdf
