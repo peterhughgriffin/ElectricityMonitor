@@ -13,31 +13,32 @@ from datetime import timedelta
 
 def GetKey():
     #Read in the API key 
-    file = open('API_Key.txt', 'r') 
-    Key = file.read()
+    with open('API_Key.txt', 'r') as file:
+        Key = file.read()
     return Key
 
 
 Key=GetKey()
 
 if 'xml' in locals():
-    print('everywhere')
-    StoredTime = datetime.strptime(root.INST[0].attrib['AT'],'%Y-%m-%d %H:%M:%S')
-    print(StoredTime)
+    print('Fetching data')
+    with open('LastAccessed.txt', 'r') as file:
+        StoredTime = datetime.strptime(file.read(),'%Y-%m-%d %H:%M:%S')
     NowTime = datetime.now()
-    print(NowTime)
     Diff = NowTime-StoredTime
-    print(Diff)
+    print('Data last accessed '+ str(Diff)[0:-7]+' ago')
     FiveMin = timedelta(minutes=5)
     if Diff > FiveMin:
-        print('Here')
+        print('Refreshing data')
+        with open('LastAccessed.txt', 'w') as file:
+            file.write(str(NowTime)[0:-7])
         #Data can be accessed from the API at the Elexon portal: https://www.elexonportal.co.uk/scripting
         url='https://downloads.elexonportal.co.uk/fuel/download/latest?key='+Key
         xml = objectify.parse(urllib.request.urlopen(url))
         root=xml.getroot()
 
 else:
-    print('There')
+    print('Fetching new data')
     #Data can be accessed from the API at the Elexon portal: https://www.elexonportal.co.uk/scripting
     url='https://downloads.elexonportal.co.uk/fuel/download/latest?key='+Key
     xml = objectify.parse(urllib.request.urlopen(url))
