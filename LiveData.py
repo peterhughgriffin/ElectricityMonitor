@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan 28 10:21:08 2020
+
+@author: Peter Hugh Griffin
+"""
 
 # Import some libraries
 import urllib.request
