@@ -30,8 +30,8 @@ def GetKey():
 Key = GetKey()
 
 # Set Dates for the period to be plotted
-Start = '2020-01-01'
-End = '2020-01-02'
+Start = '2019-01-01'
+End = '2020-01-01'
 
 # BMRS url
 url = 'https://api.bmreports.com/BMRS/FUELHH/v1?APIKey='+Key+'&FromDate='+Start+'&ToDate='+End+'&ServiceType=xml'
@@ -84,19 +84,19 @@ for HH in root.responseBody.responseList.findall('item'):
     
 # Place data into a Pandas Dataframe
 Data = {'CCGT': ccgt, 
-        'Oil': oil,
-        'Coal': coal,
-        'Nuclear': nuclear,
         'Wind': wind,
+        'Nuclear': nuclear,
+        'Biomass': biomass,
+        'Coal': coal,
         'Pumped Storage': ps,
         'Non-Pumped_Hydro': npshyd,
         'OCGT': ocgt,
+        'Oil': oil,
         'Other': other,
         'Int_France': intfr,
         'Int_Ireland': intirl,
         'Int_Netherlands': intned,
         'Int_EastWest': intew,
-        'Biomass': biomass,
         'Int_Belgium': intnem}
 
 df = pd.DataFrame(Data, index = Period)
@@ -107,9 +107,18 @@ df = pd.DataFrame(Data, index = Period)
 #df.plot()
 
 #Better is a stacked bar plot
+plt.figure()
 ax1 = df.plot.bar(stacked=True)
 ax1.set_title('Total energy generated over the period '+Start+' to '+End)
 ax1.set_xlabel('Period')
 ax1.set_ylabel('Energy MWh')
+
+
+plt.figure()
+ax1 = df.plot.bar(y='Other',stacked=True)
+ax1.set_title('Total energy generated over the period '+Start+' to '+End)
+ax1.set_xlabel('Period')
+ax1.set_ylabel('Energy MWh')
+
 
 

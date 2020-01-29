@@ -5,7 +5,14 @@ This is a project I started after submitting my PhD to build tools that can be u
 
 The data comes from the [Elexon portal](https://www.elexonportal.co.uk/scripting). To access their data you need to create a free account and then make a file called 'API_Key.txt' to store your API key in. I've also used a file called 'LastAccessed.txt', which stores the last time the live data was accessed in the form YYYY-MM-DD hh:mm:ss and does not allow reaccess of the data within five minutes.
 
-I used some of the details [here](https://energyanalyst.co.uk/uk-power-market-data-python-xml-and-pandas-dataframes/) to get started, although they have quite a different approach.
+I used some of the details [here](https://energyanalyst.co.uk/uk-power-market-data-python-xml-and-pandas-dataframes/) to get started.
+
+LiveData.py examines the latest data for electricity generation in the UK.
+
+Historic.py examines halfhourly data over a specified period.
+
+Once I've learned more I hope to build these up to be more powerful and then will probably functionalise it, so it's more flexible.
+
 
 ## Author
 
