@@ -18,9 +18,7 @@ import pandas as pd
 
 import matplotlib.pyplot as plt
 
-from datetime import datetime
-from datetime import timedelta
-#%%
+#%% Download data
 
 def GetKey():
     #Read in the API key 
@@ -28,67 +26,24 @@ def GetKey():
         Key = file.read()
     return Key
 
-
-def GetFuelMix(root):
-    Fuel =[]
-    Energy =[]
-    Pct =[]
-    
-    #Extract data
-    for child in root:
-        for e in child.getchildren():
-            Fuel.append(e.attrib['TYPE'])
-            Energy.append(int(e.attrib['VAL']))
-            Pct.append(float(e.attrib['PCT']))
-    
-    # Place data into a Pandas Dataframe
-    Data = {'Energy': Energy, 'Pct': Pct}
-    df = pd.DataFrame(Data, index = Fuel)
-    return df
-
-
+#Get API Key
 Key = GetKey()
 
+# Set Dates for the period to be plotted
 Start = '2020-01-01'
 End = '2020-01-02'
 
-
-url = 'https://api.bmreports.com/BMRS/FUELHH/v1?APIKey='+Key+'&ServiceType=xml'
-#+'&FromDate='+Start+'&ToDate='+End+'&ServiceType=xml'
+# BMRS url
+url = 'https://api.bmreports.com/BMRS/FUELHH/v1?APIKey='+Key+'&FromDate='+Start+'&ToDate='+End+'&ServiceType=xml'
 
 print('Fetching new data')
 
 xml = objectify.parse(urllib.request.urlopen(url))
 root=xml.getroot()
 
-    #%%
-    
-GetFuelMix(root.responseBody.responseList.item[1])
+#%% Extract data
 
-
-#%%
-
-Pos=root.responseBody.responseList.item
-
-Fuel =[]
-Energy =[]
-Pct =[]
-
-#Extract data
-for e in Pos.getchildren():
-    Fuel.append(e.attrib['wind'])
-    Energy.append(int(e.attrib['ccgt']))
-    Pct.append(float(e.attrib['ocgt']))
-
-Data = {'Energy': Energy, 'Pct': Pct}
-df = pd.DataFrame(Data, index = Fuel)
-
-
-
-
-#%%
-
-
+# Initialise lists for data collection
 Period =[]
 ccgt =[]
 oil =[]
@@ -106,6 +61,7 @@ intew =[]
 biomass =[]
 intnem =[]
 
+# Loop through xml structure to get data
 for HH in root.responseBody.responseList.findall('item'):
     #Half hour period is given by the date and the period number
     Period.append(HH.startTimeOfHalfHrPeriod+'_'+str(HH.settlementPeriod))
@@ -144,3 +100,16 @@ Data = {'CCGT': ccgt,
         'Int_Belgium': intnem}
 
 df = pd.DataFrame(Data, index = Period)
+
+#%% Plotting
+
+## Can plot basic line graph of df
+#df.plot()
+
+#Better is a stacked bar plot
+ax1 = df.plot.bar(stacked=True)
+ax1.set_title('Total energy generated over the period '+Start+' to '+End)
+ax1.set_xlabel('Period')
+ax1.set_ylabel('Energy MWh')
+
+
