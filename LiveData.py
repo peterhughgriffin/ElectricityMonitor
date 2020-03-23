@@ -65,24 +65,22 @@ def GetLiveData():
         for e in child.getchildren():
             Fuel.append(e.attrib['TYPE'])
             Energy.append(int(e.attrib['VAL']))
-            Pct.append(float(e.attrib['PCT']))
+   
+    # Add in Solar data
+    endpoint = "https://api0.solar.sheffield.ac.uk/pvlive/v2"
+    response = requests.get(endpoint)
+    Fuel.append("Solar")
+    Energy.append(response.json()['data'][0][2])
     
+    Total=sum(Energy)
+    for i in Energy:
+        Pct.append(100*i/Total)
+        
     # Place data into a Pandas Dataframe
     Data = {'Energy': Energy, 'Pct': Pct}
     df = pd.DataFrame(Data, index = Fuel)
     
     return df
-
-#%%
-
-
-endpoint = "https://api0.solar.sheffield.ac.uk/pvlive/v2"
-response = requests.get(endpoint)
-
-print(response.json())
-
-
-
 
 
 
