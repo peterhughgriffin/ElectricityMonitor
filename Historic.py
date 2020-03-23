@@ -63,14 +63,12 @@ while start_date <= end_date:
     start_date += delta
 
 # Clear out region and datetime data
-Solar=[]
+solar=[]
 for row in response:
-    Solar.append(row[2])
+    solar.append(row[2])
     
 
-
-
-#%% Extract data
+#%% Extract BMRS data
 
 # Initialise lists for data collection
 Period =[]
@@ -115,6 +113,7 @@ for HH in root.responseBody.responseList.findall('item'):
 Data = {'CCGT': ccgt, 
         'Wind': wind,
         'Nuclear': nuclear,
+        'Solar': solar,
         'Biomass': biomass,
         'Coal': coal,
         'Pumped Storage': ps,
