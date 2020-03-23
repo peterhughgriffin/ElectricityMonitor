@@ -40,12 +40,7 @@ df = EnG.UKEnergy()
 
 df.GetData(Start,End)
 
-# Plotting
-
-## Can plot basic line graph of df
-#df.data.plot()
-
-#Better is a stacked bar plot
+# Plot a stacked bar plot
 ax1 = df.data.plot.bar(stacked=True)
 ax1.set_title('Total energy generated over the period '+Start+' to '+End)
 ax1.set_xlabel('Period')

@@ -99,8 +99,7 @@ class UKEnergy:
         self.End = End
         
         #Get API Key
-        Key = GetKey()
-        
+        Key = GetKey()        
         
         # BMRS url
         url = 'https://api.bmreports.com/BMRS/FUELHH/v1?APIKey='+Key+'&FromDate='+Start+'&ToDate='+End+'&ServiceType=xml'
@@ -113,6 +112,7 @@ class UKEnergy:
             # The Sheffield API only allows one days worth of data in a request
             # so we need to request each day individually
         
+        print('Fetching new Solar data')
         start_date = dt.datetime.strptime(Start, '%Y-%m-%d')
         end_date = dt.datetime.strptime(End, '%Y-%m-%d')
         delta = dt.timedelta(days=1)
@@ -189,8 +189,15 @@ class UKEnergy:
                 'Int_Netherlands': intned,
                 'Int_EastWest': intew,
                 'Int_Belgium': intnem}
+
+        Data = pd.DataFrame(Data, index = Period)
         
-        self.data = pd.DataFrame(Data, index = Period)
+        # Make demand column 
+        Data.loc[:,'Demand'] = Data.sum(axis=1)
+        
+        self.data = Data
+
+
         
 
 
