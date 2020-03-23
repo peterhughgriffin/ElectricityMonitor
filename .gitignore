@@ -5,10 +5,12 @@ LastAccessed.txt
 #Code snippets
 Scribbles.py
 
+#Build Files
+*.pyc
+
 #Data files
 *.xml
 *.csv
-
 
 #Documentation
 *.pdf

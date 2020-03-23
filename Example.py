@@ -6,26 +6,18 @@ Created on Mon Mar 23 16:49:59 2020
 """
 
 
-# Import some libraries
-import urllib.request
-from lxml import objectify
-
-# Used to import Sheffield Solar data
-import requests
-
 import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
-
 import datetime as dt
 
-from UKEnergy_Class import UKEnergy
 
-#%%
+#from UKEnergy_Class import UKEnergy
+import UKEnergy_Class as EnG
 
+#%% Live Data
 
-LiveData = GetLiveData()
+LiveData = EnG.GetLiveData()
 
 # Sort the data Descending in terms of energy contribution
 LiveData = LiveData.sort_values(by='Energy', ascending=False)
@@ -35,6 +27,29 @@ LiveData = LiveData.sort_values(by='Energy', ascending=False)
 ax1 = LiveData.plot.pie(y='Energy', autopct='%1.1f%%', shadow=False, startangle=0, legend=False)
 ax1.set_title('Current Percentage Share of UK Electricity mix')
 ax1.set_ylabel('')
+
+
+#%% Historic Data
+
+# Set Dates for the period to be plotted
+Start = '2020-01-28'
+End = '2020-01-29'
+
+
+df = EnG.UKEnergy()
+
+df.GetData(Start,End)
+
+# Plotting
+
+## Can plot basic line graph of df
+#df.data.plot()
+
+#Better is a stacked bar plot
+ax1 = df.data.plot.bar(stacked=True)
+ax1.set_title('Total energy generated over the period '+Start+' to '+End)
+ax1.set_xlabel('Period')
+ax1.set_ylabel('Energy MWh')
 
 
 

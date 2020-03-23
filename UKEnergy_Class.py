@@ -95,6 +95,9 @@ class UKEnergy:
 
     def GetData(self,Start,End):
         
+        self.Start = Start
+        self.End = End
+        
         #Get API Key
         Key = GetKey()
         
