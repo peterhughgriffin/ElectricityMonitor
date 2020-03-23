@@ -10,15 +10,24 @@ TO view the xml structure see:
 
 
 # Import some libraries
+import datetime as dt
+
 import urllib.request
 from lxml import objectify
 
+# Used to import Sheffield Solar data
+import requests
+
 import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
 
-#%% Download data
+
+# Set Dates for the period to be plotted
+Start = '2020-01-28'
+End = '2020-01-29'
+
+#%% Download BMRS data
 
 def GetKey():
     #Read in the API key 
@@ -29,17 +38,37 @@ def GetKey():
 #Get API Key
 Key = GetKey()
 
-# Set Dates for the period to be plotted
-Start = '2020-01-28'
-End = '2020-01-29'
 
 # BMRS url
 url = 'https://api.bmreports.com/BMRS/FUELHH/v1?APIKey='+Key+'&FromDate='+Start+'&ToDate='+End+'&ServiceType=xml'
-
-print('Fetching new data')
+print('Fetching new BMRS data')
 
 xml = objectify.parse(urllib.request.urlopen(url))
 root=xml.getroot()
+
+#%% Download Sheffield Solar data
+# The Sheffield API only allows one days worth of data in a request, so we need to request each day individually
+
+start_date = dt.datetime.strptime(Start, '%Y-%m-%d')
+end_date = dt.datetime.strptime(End, '%Y-%m-%d')
+delta = dt.timedelta(days=1)
+
+response =[]
+
+while start_date <= end_date:
+    endpoint = 'https://api0.solar.sheffield.ac.uk/pvlive/v2?start='+start_date.strftime("%Y-%m-%d")+'T00:00:00&data_format=json'
+    response.extend(requests.get(endpoint).json()['data'])
+    # Remove last entry, which is midnight the following morning (In order to avoid duplication)
+    del response[-1]
+    start_date += delta
+
+# Clear out region and datetime data
+Solar=[]
+for row in response:
+    Solar.append(row[2])
+    
+
+
 
 #%% Extract data
 
