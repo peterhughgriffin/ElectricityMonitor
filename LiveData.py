@@ -9,6 +9,9 @@ Created on Tue Jan 28 10:21:08 2020
 import urllib.request
 from lxml import objectify
 
+# Used to import Sheffield Solar data
+import requests
+
 import numpy as np
 import pandas as pd
 
@@ -69,6 +72,20 @@ def GetLiveData():
     df = pd.DataFrame(Data, index = Fuel)
     
     return df
+
+#%%
+
+
+endpoint = "https://api0.solar.sheffield.ac.uk/pvlive/v2"
+response = requests.get(endpoint)
+
+print(response.json())
+
+
+
+
+
+
 
 #%%
 
