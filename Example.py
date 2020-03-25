@@ -16,36 +16,31 @@ import datetime as dt
 import UKEnergy_Class as EnG
 
 #%% Live Data
-
-LiveData = EnG.GetLiveData()
-
-# Sort the data Descending in terms of energy contribution
-LiveData = LiveData.sort_values(by='Energy', ascending=False)
-
-
-# Plot pie chart
-ax1 = LiveData.plot.pie(y='Energy', autopct='%1.1f%%', shadow=False, startangle=0, legend=False)
-ax1.set_title('Current Percentage Share of UK Electricity mix')
-ax1.set_ylabel('')
+#
+#LiveData = EnG.GetLiveData()
+#
+## Sort the data Descending in terms of energy contribution
+#LiveData = LiveData.sort_values(by='Energy', ascending=False)
+#
+#
+## Plot pie chart
+#ax1 = LiveData.plot.pie(y='Energy', autopct='%1.1f%%', shadow=False, startangle=0, legend=False)
+#ax1.set_title('Current Percentage Share of UK Electricity mix')
+#ax1.set_ylabel('')
 
 
 #%% Historic Data
 
 # Set Dates for the period to be plotted
 Start = '2020-01-28'
-End = '2020-01-29'
+End = '2020-02-29'
 
 
 df = EnG.UKEnergy()
 
 df.GetData(Start,End)
 
-# Plot a stacked bar plot
-ax1 = df.data.plot.bar(stacked=True)
-ax1.set_title('Total energy generated over the period '+Start+' to '+End)
-ax1.set_xlabel('Period')
-ax1.set_ylabel('Energy MWh')
-
+df.plot(48)
 
 
 

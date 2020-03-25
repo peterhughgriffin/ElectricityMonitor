@@ -173,7 +173,8 @@ class UKEnergy:
             intnem.append(int(HH.intnem))
             
         # Place data into a Pandas Dataframe
-        Data = {'CCGT': ccgt, 
+        Data = {'HH':Period,
+                'CCGT': ccgt, 
                 'Wind': wind,
                 'Nuclear': nuclear,
                 'Solar': solar,
@@ -190,12 +191,60 @@ class UKEnergy:
                 'Int_EastWest': intew,
                 'Int_Belgium': intnem}
 
-        Data = pd.DataFrame(Data, index = Period)
+        Data = pd.DataFrame(Data)
+#        Data = pd.DataFrame(Data, index = Period)
         
         # Make demand column 
         Data.loc[:,'Demand'] = Data.sum(axis=1)
         
         self.data = Data
+        
+        
+        
+    def plot(self,HHs,Demand=True):
+        if HHs<1 or type(HHs) != int:
+            raise Exception("HHs must be a positive integer")
+        elif HHs==1:
+            pass
+        else:
+            RedData=self.data.groupby(self.data.index // HHs).sum()
+            
+#            ReducedData=[]
+#            labels=[]
+#            for index, row in self.data.iterrows():
+#                labels.append(index)
+#                part = self.data.iloc[row:row+HHs]
+#                ReducedData.append(part.sum(axis=0))
+#                # the above does not work. We only have access to the one row this way, we need to have acces to HHs rows
+                
+            
+#            RedData= pd.DataFrame(ReducedData, index = labels)
+         
+
+            
+        
+        
+        
+        if Demand:
+#            bins=len(self.data)/HHs
+#            dates=pd.cut(self.data['Index'], bins)
+#            out=pd.cut(self.data['Demand'], bins)
+#            
+#            ax1=plt.bar(dates,out)
+            # Plot a stacked bar plot
+            ax1 = RedData['Demand'].plot.bar(stacked=True)
+            ax1.set_title('Total energy generated over the period '+self.Start+' to '+self.End)
+            ax1.set_xlabel('Period')
+            ax1.set_ylabel('Energy MWh')
+        else:
+#            bins=int(len(self.data/HHs))
+#            out=pd.cut(self.data.drop(['Demand'],axis=1), bins)
+            # Plot a stacked bar plot
+            ax1 = RedData.drop(['Demand'],axis=1).plot.bar(stacked=True)
+            ax1.set_title('Total energy generated over the period '+self.Start+' to '+self.End)
+            ax1.set_xlabel('Period')
+            ax1.set_ylabel('Energy MWh')
+
 
 
         
