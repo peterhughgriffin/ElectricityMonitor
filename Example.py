@@ -40,7 +40,7 @@ df = EnG.UKEnergy()
 
 df.GetData(Start,End)
 
-df.plot(48,False)
+df.plot(48,True)
 
 
 
