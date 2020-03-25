@@ -40,6 +40,8 @@ df = EnG.UKEnergy()
 
 df.GetData(Start,End)
 
+df.merge(['Int_Belgium','Int_EastWest','Int_Netherlands','Int_Ireland','Int_France'],'Interconnectors')
+
 df.plot(24,False)
 
 

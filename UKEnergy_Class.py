@@ -238,6 +238,14 @@ class UKEnergy:
         fig1=plt.gcf()
         fig1.autofmt_xdate()
 
+    def merge(self,Subs,Label):
+        """
+        This function merges given categories on the given dataframe
+        Subs is a list of the headings that are to be merged
+        Head is a string to be the new name for the heading
+        """
         
-
+        self.data[Label]=self.data[Subs].sum(axis=1).tolist()
+        
+        self.data=self.data.drop(Subs,1)
 
