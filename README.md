@@ -8,11 +8,9 @@ To access the Elexon portal you need to create a free account and then make a fi
 
 I used some of the details [here](https://energyanalyst.co.uk/uk-power-market-data-python-xml-and-pandas-dataframes/) to get started.
 
-LiveData.py examines the latest data for electricity generation in the UK.
+UKEnergyClass.py contains the class used to analyse historic energy data and a function to get live energy data.
 
-Historic.py examines halfhourly data over a specified period.
-
-Once I've learned more I hope to build these up to be more powerful and then will probably functionalise it, so it's more flexible.
+Example.py shows how these functions can be used.
 
 
 ## Author
