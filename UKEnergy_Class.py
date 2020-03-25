@@ -241,9 +241,12 @@ class UKEnergy:
     def merge(self,Subs,Label):
         """
         This function merges given categories on the given dataframe
-        Subs is a list of the headings that are to be merged
+        Subs is a list of the headings that are to be merged or a search string to find columns
         Head is a string to be the new name for the heading
         """
+        # If Subs is a string then find columns containing that string
+        if type(Subs)==str:
+            Subs = [col for col in self.data.columns if Subs in col]
         
         self.data[Label]=self.data[Subs].sum(axis=1).tolist()
         
