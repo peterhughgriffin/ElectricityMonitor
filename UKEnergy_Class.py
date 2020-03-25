@@ -28,6 +28,11 @@ import matplotlib.pyplot as plt
 import datetime as dt
 #%%
 
+# Simple function to allow iterating through a list taking n elements at a time
+def grouped(iterable, n):
+    "s -> (s0,s1,s2,...sn-1), (sn,sn+1,sn+2,...s2n-1), (s2n,s2n+1,s2n+2,...s3n-1), ..."
+    return zip(*[iter(iterable)]*n)
+
 def GetKey():
     #Read in the API key 
     with open('API_Key.txt', 'r') as file:
@@ -213,14 +218,17 @@ class UKEnergy:
         """
         # Very much not done!!! This is just a sketch of how I might begin this
         
-        
+        # Add start and end of the input data to Times        
         Times.insert(self.Start)
         Times.append(self.End)
         
         Objs=[]
-        for time in Times:
-            
+        for beg, end in grouped(Times,2):
             Obj = EnG.UKEnergy()
+            Obj.Start=beg
+            Obj.End=end
+            Obj.data=self.data
+            
             Objs.append(Obj)
         
         return Objs
