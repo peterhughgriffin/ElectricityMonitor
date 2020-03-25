@@ -32,15 +32,15 @@ import UKEnergy_Class as EnG
 #%% Historic Data
 #
 # Set Dates for the period to be plotted
-Start = '2020-01-28'
-End = '2020-02-29'
+Start = '2020-01-29'
+End = '2020-02-01'
 
 
 df = EnG.UKEnergy()
 
 df.GetData(Start,End)
 
-df.plot(48,True)
+df.plot(24,False)
 
 
 

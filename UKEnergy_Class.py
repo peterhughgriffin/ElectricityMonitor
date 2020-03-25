@@ -172,17 +172,16 @@ class UKEnergy:
             biomass.append(int(HH.biomass))
             intnem.append(int(HH.intnem))
             
-        # Split Period into date and half hour
-        Dates=[]
-        HHs=[]
+        # Make period into a datetime object
+        Periods=[]
         for item in Period:
             [item_Date,item_HH] = item.split('_')
-            Dated=dt.datetime.strptime(item_Date,'%Y-%m-%d')
-            Dates.append(Dated)
-            HHs.append(item_HH)
+            Time=dt.datetime.strptime(item_Date,'%Y-%m-%d')
+            # Add half hours to datetime
+            Time=Time+dt.timedelta(0,(int(item_HH)-1)*30*60)
+            Periods.append(Time)
         # Place data into a Pandas Dataframe
-        Data = {'Date':Dates,
-                'HH':HHs,
+        Data = {'Period':Periods,
                 'CCGT': ccgt, 
                 'Wind': wind,
                 'Nuclear': nuclear,
@@ -218,39 +217,26 @@ class UKEnergy:
             RedData=self.data
         else:
             RedData=self.data.groupby(self.data.index // HHs).sum()
-            periods = self.data['Date'][0::HHs]
-            RedData['Date']=periods.tolist()
+            periods = self.data['Period'][0::HHs]
+            RedData['Period']=periods.tolist()
         
         if Demand:
 #            # Plot a stacked bar plot
-#            fig1, ax1 = plt.subplots()
-#            plt1 = ax1.bar(periods,RedData['Demand'])
-#            ax1.set_title('Total energy generated over the period '+self.Start+' to '+self.End)
-#            ax1.set_xlabel('Period')
-#            ax1.set_ylabel('Energy MWh')
-#            # Tell matplotlib to interpret the x-axis values as dates
-#            ax1.xaxis_date()
-#            fig1.autofmt_xdate()
-            ax1=RedData.plot(x='Date',y='Demand',kind='bar', stacked=True)
+            ax1=RedData.plot(x='Period',y='Demand',kind='bar', stacked=True)
             ax1.set_title('Total energy demand over the period '+self.Start+' to '+self.End)
-            ax1.set_xlabel('Period')
-            ax1.set_ylabel('Energy MWh')
-            
-            # Tell matplotlib to interpret the x-axis values as dates
-            ax1.xaxis_date()
-            fig1=plt.gcf()
-            fig1.autofmt_xdate()
         else:
             # Plot a stacked bar plot
-            ax1=RedData.drop(['Demand'],axis=1).plot(x='Date',kind='bar', stacked=True)
+            ax1=RedData.drop(['Demand'],axis=1).plot(x='Period',kind='bar', stacked=True)
             ax1.set_title('Total energy generated over the period '+self.Start+' to '+self.End)
-            ax1.set_xlabel('Period')
-            ax1.set_ylabel('Energy MWh')
-            
-            # Tell matplotlib to interpret the x-axis values as dates
-            ax1.xaxis_date()
-            fig1=plt.gcf()
-            fig1.autofmt_xdate()
+
+        # Format the plot
+        ax1.set_xlabel('Period')
+        ax1.set_ylabel('Energy MWh')
+        
+        # Tell matplotlib to interpret the x-axis values as dates
+        ax1.xaxis_date()
+        fig1=plt.gcf()
+        fig1.autofmt_xdate()
 
         
 
