@@ -28,11 +28,6 @@ import matplotlib.pyplot as plt
 import datetime as dt
 #%%
 
-# Simple function to allow iterating through a list taking n elements at a time
-def grouped(iterable, n):
-    "s -> (s0,s1,s2,...sn-1), (sn,sn+1,sn+2,...s2n-1), (s2n,s2n+1,s2n+2,...s3n-1), ..."
-    return zip(*[iter(iterable)]*n)
-
 def GetKey():
     #Read in the API key 
     with open('API_Key.txt', 'r') as file:
@@ -211,38 +206,33 @@ class UKEnergy:
         
         self.data = Data
         
-    def Split(self,Times):
+    def plot(self,HHs,Demand,Beg,End):
         """
-        Splits self into a list of new UKEnergy objects split at the times given by the list "Times"
-        Times must be a list of ordered datetime objects, given to the nearest half hour.
+        Plots data as specified
+            HHs groups data in bins of HHs half hours
+            Demand is a switch that plots just the demand or the energy source breakdown
+            Beg defines the start time for the plot
+            End defines the End time for the plot
         """
-        # Very much not done!!! This is just a sketch of how I might begin this
+        print(0)
+        # Find position of Start and end time, divide by HHs and cast as integers
+        BegPos = int(self.data.loc[self.data['Period'] == Beg].index.values[0]/HHs)
+        EndPos = int(self.data.loc[self.data['Period'] == End].index.values[0]/HHs)
         
-        # Add start and end of the input data to Times        
-        Times.insert(self.Start)
-        Times.append(self.End)
+    
         
-        Objs=[]
-        for beg, end in grouped(Times,2):
-            Obj = EnG.UKEnergy()
-            Obj.Start=beg
-            Obj.End=end
-            Obj.data=self.data
-            
-            Objs.append(Obj)
-        
-        return Objs
-        
-    def plot(self,HHs,Demand=True):
         # HHs defines the number of HHs to merge together, i.e, the binning of the displayed data
         if HHs<1 or type(HHs) != int:
             raise Exception("HHs must be a positive integer")
         elif HHs==1:
-            RedData=self.data
+            RedData=self.data.iloc[BegPos:EndPos]
+#            RedData=self.data.loc[self.data['Period'] == Beg:self.data['Period'] == End]
         else:
             RedData=self.data.groupby(self.data.index // HHs).sum()
             periods = self.data['Period'][0::HHs]
             RedData['Period']=periods.tolist()
+            RedData=RedData.iloc[BegPos:EndPos]
+#            RedData=RedData.loc[RedData['Period'] == Beg:RedData['Period'] == End]
         
         if Demand:
 #            # Plot a stacked bar plot

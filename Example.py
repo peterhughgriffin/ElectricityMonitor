@@ -45,10 +45,15 @@ df.GetData(Start,End)
 #df.merge(['Int_Belgium','Int_EastWest','Int_Netherlands','Int_Ireland','Int_France'],'Interconnectors')
 # Or by search string
 df.merge('Int_','Interconnectors')
+#%%
+# Select data range of interest
+Beg=dt.datetime.strptime('2020-01-30','%Y-%m-%d')
+End=dt.datetime.strptime('2020-01-31', '%Y-%m-%d')
 
 # Plot the data
-df.plot(48,False)
+df.plot(1,False,Beg,End)
 
+#%%
 
 
 
