@@ -94,9 +94,9 @@ class UKEnergy:
         pass
 
     def GetData(self,Start,End):
-        
-        self.Start = Start
-        self.End = End
+                
+        self.Start = dt.datetime.strptime(Start, '%Y-%m-%d')
+        self.End = dt.datetime.strptime(End, '%Y-%m-%d')
         
         #Get API Key
         Key = GetKey()        
@@ -113,13 +113,12 @@ class UKEnergy:
             # so we need to request each day individually
         
         print('Fetching new Solar data')
-        start_date = dt.datetime.strptime(Start, '%Y-%m-%d')
-        end_date = dt.datetime.strptime(End, '%Y-%m-%d')
+        start_date = self.Start
         delta = dt.timedelta(days=1)
         
         response =[]
         # Iterate through days and request data
-        while start_date <= end_date:
+        while start_date <= self.End:
             endpoint = 'https://api0.solar.sheffield.ac.uk/pvlive/v2?start='+start_date.strftime("%Y-%m-%d")+'T00:00:00&data_format=json'
             response.extend(requests.get(endpoint).json()['data'])
             # Remove last entry, which is midnight the following morning (In order to avoid duplication)
@@ -207,7 +206,24 @@ class UKEnergy:
         
         self.data = Data
         
+    def Split(self,Times):
+        """
+        Splits self into a list of new UKEnergy objects split at the times given by the list "Times"
+        Times must be a list of ordered datetime objects, given to the nearest half hour.
+        """
+        # Very much not done!!! This is just a sketch of how I might begin this
         
+        
+        Times.insert(self.Start)
+        Times.append(self.End)
+        
+        Objs=[]
+        for time in Times:
+            
+            Obj = EnG.UKEnergy()
+            Objs.append(Obj)
+        
+        return Objs
         
     def plot(self,HHs,Demand=True):
         # HHs defines the number of HHs to merge together, i.e, the binning of the displayed data
@@ -223,11 +239,11 @@ class UKEnergy:
         if Demand:
 #            # Plot a stacked bar plot
             ax1=RedData.plot(x='Period',y='Demand',kind='bar', stacked=True)
-            ax1.set_title('Total energy demand over the period '+self.Start+' to '+self.End)
+            ax1.set_title('Total energy demand over the period '+self.Start.strftime("%Y-%m-%d")+' to '+self.End.strftime("%Y-%m-%d"))
         else:
             # Plot a stacked bar plot
             ax1=RedData.drop(['Demand'],axis=1).plot(x='Period',kind='bar', stacked=True)
-            ax1.set_title('Total energy generated over the period '+self.Start+' to '+self.End)
+            ax1.set_title('Total energy generated over the period '+self.Start.strftime("%Y-%m-%d")+' to '+self.End.strftime("%Y-%m-%d"))
 
         # Format the plot
         ax1.set_xlabel('Period')
