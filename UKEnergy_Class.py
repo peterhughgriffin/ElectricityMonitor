@@ -172,8 +172,17 @@ class UKEnergy:
             biomass.append(int(HH.biomass))
             intnem.append(int(HH.intnem))
             
+        # Split Period into date and half hour
+        Dates=[]
+        HHs=[]
+        for item in Period:
+            [item_Date,item_HH] = item.split('_')
+            Dated=dt.datetime.strptime(item_Date,'%Y-%m-%d')
+            Dates.append(Dated)
+            HHs.append(item_HH)
         # Place data into a Pandas Dataframe
-        Data = {'HH':Period,
+        Data = {'Date':Dates,
+                'HH':HHs,
                 'CCGT': ccgt, 
                 'Wind': wind,
                 'Nuclear': nuclear,
@@ -205,46 +214,29 @@ class UKEnergy:
         if HHs<1 or type(HHs) != int:
             raise Exception("HHs must be a positive integer")
         elif HHs==1:
-            pass
+            RedData=self.data
         else:
             RedData=self.data.groupby(self.data.index // HHs).sum()
-            
-#            ReducedData=[]
-#            labels=[]
-#            for index, row in self.data.iterrows():
-#                labels.append(index)
-#                part = self.data.iloc[row:row+HHs]
-#                ReducedData.append(part.sum(axis=0))
-#                # the above does not work. We only have access to the one row this way, we need to have acces to HHs rows
-                
-            
-#            RedData= pd.DataFrame(ReducedData, index = labels)
-         
-
-            
-        
-        
+            periods = self.data['Date'][0::HHs]
         
         if Demand:
-#            bins=len(self.data)/HHs
-#            dates=pd.cut(self.data['Index'], bins)
-#            out=pd.cut(self.data['Demand'], bins)
-#            
-#            ax1=plt.bar(dates,out)
             # Plot a stacked bar plot
-            ax1 = RedData['Demand'].plot.bar(stacked=True)
+            fig1, ax1 = plt.subplots()
+            plt1 = ax1.bar(periods,RedData['Demand'])
             ax1.set_title('Total energy generated over the period '+self.Start+' to '+self.End)
             ax1.set_xlabel('Period')
             ax1.set_ylabel('Energy MWh')
+            # Tell matplotlib to interpret the x-axis values as dates
+            ax1.xaxis_date()
+            fig1.autofmt_xdate()
         else:
-#            bins=int(len(self.data/HHs))
-#            out=pd.cut(self.data.drop(['Demand'],axis=1), bins)
             # Plot a stacked bar plot
-            ax1 = RedData.drop(['Demand'],axis=1).plot.bar(stacked=True)
+            fig1, ax1 = plt.subplots()
+            plt1 = ax1.bar(periods,RedData.drop(['Demand'],axis=1),stacked=True)
             ax1.set_title('Total energy generated over the period '+self.Start+' to '+self.End)
             ax1.set_xlabel('Period')
             ax1.set_ylabel('Energy MWh')
-
+            fig1.autofmt_xdate()
 
 
         
