@@ -211,6 +211,7 @@ class UKEnergy:
         
         
     def plot(self,HHs,Demand=True):
+        # HHs defines the number of HHs to merge together, i.e, the binning of the displayed data
         if HHs<1 or type(HHs) != int:
             raise Exception("HHs must be a positive integer")
         elif HHs==1:
@@ -218,6 +219,7 @@ class UKEnergy:
         else:
             RedData=self.data.groupby(self.data.index // HHs).sum()
             periods = self.data['Date'][0::HHs]
+            RedData['Date']=periods.tolist()
         
         if Demand:
             # Plot a stacked bar plot
@@ -231,13 +233,22 @@ class UKEnergy:
             fig1.autofmt_xdate()
         else:
             # Plot a stacked bar plot
-            fig1, ax1 = plt.subplots()
-            plt1 = ax1.bar(periods,RedData.drop(['Demand'],axis=1),stacked=True)
+            
+#            plt1 = ax1.bar(periods,RedData.drop(['Demand'],axis=1),stacked=True)
+            
+            ax1=RedData.drop(['Demand'],axis=1).plot(x='Date',kind='bar', stacked=True)
             ax1.set_title('Total energy generated over the period '+self.Start+' to '+self.End)
             ax1.set_xlabel('Period')
             ax1.set_ylabel('Energy MWh')
+            
+#            locs, labels = xticks()  # Get the current locations and labels.
+#            NumLab=len(periods)
+#            plt.xticks(np.arange(NumLab), periods)  # Set text labels.
+            
+            # Tell matplotlib to interpret the x-axis values as dates
+            ax1.xaxis_date()
+            fig1=plt.gcf()
             fig1.autofmt_xdate()
-
 
         
 
