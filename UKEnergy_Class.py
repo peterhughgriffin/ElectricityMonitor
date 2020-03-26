@@ -214,28 +214,24 @@ class UKEnergy:
             Beg defines the start time for the plot
             End defines the End time for the plot
         """
-        print(0)
         # Find position of Start and end time, divide by HHs and cast as integers
         BegPos = int(self.data.loc[self.data['Period'] == Beg].index.values[0]/HHs)
         EndPos = int(self.data.loc[self.data['Period'] == End].index.values[0]/HHs)
-        
-    
-        
+       
         # HHs defines the number of HHs to merge together, i.e, the binning of the displayed data
         if HHs<1 or type(HHs) != int:
             raise Exception("HHs must be a positive integer")
         elif HHs==1:
             RedData=self.data.iloc[BegPos:EndPos]
-#            RedData=self.data.loc[self.data['Period'] == Beg:self.data['Period'] == End]
         else:
             RedData=self.data.groupby(self.data.index // HHs).sum()
             periods = self.data['Period'][0::HHs]
             RedData['Period']=periods.tolist()
             RedData=RedData.iloc[BegPos:EndPos]
-#            RedData=RedData.loc[RedData['Period'] == Beg:RedData['Period'] == End]
         
+        # Choose whether to plot just the demand or the generation sources 
         if Demand:
-#            # Plot a stacked bar plot
+            # Plot 
             ax1=RedData.plot(x='Period',y='Demand',kind='bar', stacked=True)
             ax1.set_title('Total energy demand over the period '+self.Start.strftime("%Y-%m-%d")+' to '+self.End.strftime("%Y-%m-%d"))
         else:
