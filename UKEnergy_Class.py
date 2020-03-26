@@ -21,7 +21,10 @@ import requests
 import numpy as np
 import pandas as pd
 
+#For all your plotting needs
 import matplotlib.pyplot as plt
+# To manage dates on axis labels
+import matplotlib.dates as mdates
 
 #from datetime import datetime
 #from datetime import timedelta
@@ -203,7 +206,7 @@ class UKEnergy:
                 'Int_Belgium': intnem}
 
         Data = pd.DataFrame(Data)
-        
+
         # Make demand column 
         Data.loc[:,'Demand'] = Data.sum(axis=1)
         self.data = Data
@@ -241,14 +244,26 @@ class UKEnergy:
             ax1=RedData.drop(['Demand'],axis=1).plot(x='Period',kind='bar', stacked=True)
             ax1.set_title('Total energy generated over the period '+self.Start.strftime("%Y-%m-%d")+' to '+self.End.strftime("%Y-%m-%d"))
 
-        # Format the plot
+        # Add axis labels
         ax1.set_xlabel('Period')
         ax1.set_ylabel('Energy MWh')
         
         # Tell matplotlib to interpret the x-axis values as dates
-        ax1.xaxis_date()
+#        ax1.xaxis_date()
+#        fmt = mdates.DateFormatter('%Y-%m-%d')
+#        ax1.xaxis.set_major_formatter(fmt)
+#        ax1.format_xdata = mdates.DateFormatter('%Y-%m-%d')
+    
+        #Nice orientation of x axis dates        
         fig1=plt.gcf()
         fig1.autofmt_xdate()
+        
+        # Reduce the number of x-axis labels given
+        ax1.locator_params(axis='x', nbins=13)
+        # Make Plot Fullscreen
+        manager = plt.get_current_fig_manager()
+        manager.window.showMaximized()
+
 
     def merge(self,Subs,Label):
         """

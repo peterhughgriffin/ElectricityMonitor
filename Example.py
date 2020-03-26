@@ -32,8 +32,8 @@ import UKEnergy_Class as EnG
 #%% Historic Data
 #
 # Set Dates for the period to be plotted
-Start = '2020-01-29'
-End = '2020-02-11'
+Start = '2020-01-01'
+End = '2020-01-31'
 
 # Initialise data frame of energy date
 df = EnG.UKEnergy()
@@ -47,11 +47,11 @@ df.GetData(Start,End)
 df.merge('Int_','Interconnectors')
 #%%
 # Select data range of interest
-Beg=dt.datetime.strptime('2020-01-30','%Y-%m-%d')
+Beg=dt.datetime.strptime('2020-01-01','%Y-%m-%d')
 End=dt.datetime.strptime('2020-01-31', '%Y-%m-%d')
 
 # Plot the data
-df.plot(1,False,Beg,End)
+df.plot(48,False,Beg,End)
 
 #%%
 
