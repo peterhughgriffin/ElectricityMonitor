@@ -94,7 +94,12 @@ class UKEnergy:
         pass
 
     def GetData(self,Start,End):
-                
+        """
+        This function imports the UK electricity mix from Elexon plus Solar data from Sheffield Solar
+        Start gives the date of the beginning of the period imported.
+        End gives the date of the end of the period imported.
+        """
+
         self.Start = dt.datetime.strptime(Start, '%Y-%m-%d')
         self.End = dt.datetime.strptime(End, '%Y-%m-%d')
         
@@ -131,7 +136,6 @@ class UKEnergy:
             solar.append(row[2])
             
         # Extract BMRS data
-        
         # Initialise lists for data collection
         Period =[]
         ccgt =[]
@@ -199,11 +203,9 @@ class UKEnergy:
                 'Int_Belgium': intnem}
 
         Data = pd.DataFrame(Data)
-#        Data = pd.DataFrame(Data, index = Period)
         
         # Make demand column 
         Data.loc[:,'Demand'] = Data.sum(axis=1)
-        
         self.data = Data
         
     def plot(self,HHs,Demand,Beg,End):
