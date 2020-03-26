@@ -34,11 +34,11 @@ import UKEnergy_Class as EnG
 # Set Dates for the period to be plotted
 Start = '2020-01-01'
 End = '2020-01-31'
-
-# Initialise data frame of energy date
-df = EnG.UKEnergy()
-# Get the energy data and load into the dataframe
-df.GetData(Start,End)
+#
+## Initialise data frame of energy date
+#df = EnG.UKEnergy()
+## Get the energy data and load into the dataframe
+#df.GetData(Start,End)
 
 # Merge the interconnectors into one item
 # By List of headings
@@ -47,11 +47,11 @@ df.GetData(Start,End)
 df.merge('Int_','Interconnectors')
 #%%
 # Select data range of interest
-Beg=dt.datetime.strptime('2020-01-01','%Y-%m-%d')
+Beg=dt.datetime.strptime('2020-01-30','%Y-%m-%d')
 End=dt.datetime.strptime('2020-01-31', '%Y-%m-%d')
 
 # Plot the data
-df.plot(48,False,Beg,End)
+df.plot(1,False,Beg,End)
 
 #%%
 

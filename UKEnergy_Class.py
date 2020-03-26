@@ -246,7 +246,7 @@ class UKEnergy:
 
         # Add axis labels
         ax1.set_xlabel('Period')
-        ax1.set_ylabel('Energy MWh')
+        ax1.set_ylabel('Power MW')
         
         # Tell matplotlib to interpret the x-axis values as dates
 #        ax1.xaxis_date()
